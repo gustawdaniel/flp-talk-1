@@ -137,12 +137,7 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            questions?: {
-                                /** @description Generated question text */
-                                question?: string;
-                                /** @description Expected answer text */
-                                answer?: string;
-                            }[];
+                            questions?: components["schemas"]["Question"][];
                         };
                     };
                 };
@@ -212,7 +207,14 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
+    schemas: {
+        Question: {
+            /** @description Generated question text */
+            question: string;
+            /** @description Expected answer text */
+            answer: string;
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;

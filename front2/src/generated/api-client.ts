@@ -10,6 +10,13 @@
  * ---------------------------------------------------------------
  */
 
+export interface Question {
+  /** Generated question text */
+  question: string;
+  /** Expected answer text */
+  answer: string;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -341,12 +348,7 @@ export class Api<
     ) =>
       this.request<
         {
-          questions?: {
-            /** Generated question text */
-            question: string;
-            /** Expected answer text */
-            answer: string;
-          }[];
+          questions?: Question[];
         },
         any
       >({

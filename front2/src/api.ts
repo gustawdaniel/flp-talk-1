@@ -1,16 +1,11 @@
 const API_URL = "http://127.0.0.1:4747"; // Change this to your actual API URL
 // const API_URL = "https://42f8-185-181-209-142.ngrok-free.app";
 import { Api } from "./generated/api-client";
-import type { paths } from "./generated/api-types";
+import type { components } from "./generated/api-types";
 
 const isTesting = true;
 
-export interface Question {
-  /** @description Generated question text */
-  question: string;
-  /** @description Expected answer text */
-  answer: string;
-}
+export type Question = components["schemas"]["Question"];
 
 // Initialize API client
 const apiClient = new Api({

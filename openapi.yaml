@@ -4,6 +4,21 @@ info:
   version: 1.0.0
   description: API for transcription, translation, question generation, and answer verification
 
+components:
+  schemas:
+    Question:
+      type: object
+      required:
+        - question
+        - answer
+      properties:
+        question:
+          type: string
+          description: Generated question text
+        answer:
+          type: string
+          description: Expected answer text
+
 paths:
   /transcript:
     get:
@@ -90,16 +105,7 @@ paths:
                   questions:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        question:
-                          required: true
-                          type: string
-                          description: Generated question text
-                        answer:
-                          required: true
-                          type: string
-                          description: Expected answer text
+                      $ref: '#/components/schemas/Question'
 
   /check_answer:
     post:
