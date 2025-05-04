@@ -25,7 +25,9 @@
 
 **Request Body:**
 ```
-Raw text content to translate
+{
+  "text": <utf-8>
+}
 ```
 
 **Response:**
