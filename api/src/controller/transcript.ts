@@ -17,7 +17,7 @@ interface TranscriptRouteGeneric extends RouteGenericInterface {
 }
 
 const transcriptParamsSchema = z.object({
-    url: z.string().default('https://www.youtube.com/watch?v=0VLAoVGf_74&t=133s'),
+    url: z.string()//.default('https://www.youtube.com/watch?v=0VLAoVGf_74&t=133s'),
 });
 
 export async function transcript(req: FastifyRequest<TranscriptRouteGeneric>): Promise<TranscriptResults> {
@@ -25,7 +25,11 @@ export async function transcript(req: FastifyRequest<TranscriptRouteGeneric>): P
 
     const red = await getRedisClient();
 
-    const out = await red.get(`transcript:${JSON.stringify(req.params)}`);
+    console.log("params", {params})
+
+    const key = `transcript:${JSON.stringify({params})}`
+
+    const out = await red.get(key);
     if(out) {
         console.log("Cache hit")
         return JSON.parse(out);
@@ -124,7 +128,7 @@ export async function transcript(req: FastifyRequest<TranscriptRouteGeneric>): P
         text
     };
 
-    await red.set(`transcript:${JSON.stringify(req.params)}`, JSON.stringify(res));
+    await red.set(key, JSON.stringify(res));
 
     return res
 }

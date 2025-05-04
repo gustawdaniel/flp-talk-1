@@ -45,7 +45,7 @@ Translated text content
 
 **Request Body:**
 ```
-Text content to generate questions from
+{text: Text content to generate questions from}
 ```
 
 **Response:**

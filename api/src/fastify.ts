@@ -12,6 +12,8 @@ import pJson from '../package.json';
 import {transcript} from "./controller/transcript";
 import {translate} from "./controller/translate";
 import * as fs from "node:fs";
+import {buildQuestions} from "./controller/build_questions";
+import {checkAnswer} from "./controller/check_answers";
 
 interface TokenPayload {
     id: number,
@@ -75,6 +77,9 @@ function router(
     server.get('/', PUBLIC, version);
     server.get('/transcript', PUBLIC, transcript);
     server.post('/translate', PUBLIC, translate);
+    server.post('/build_questions', PUBLIC, buildQuestions);
+    server.post('/check_answer', PUBLIC, checkAnswer);
+
 
     next();
 }
