@@ -1,17 +1,26 @@
-import { json } from "react-router-dom";
+const API_URL = "http://127.0.0.1:4747"; // Change this to your actual API URL
+// const API_URL = "https://42f8-185-181-209-142.ngrok-free.app";
+import { Api } from "./generated/api-client";
+import type { paths } from "./generated/api-types";
 
-// const API_URL = "https://localhost:3001"; // Change this to your actual API URL
-const API_URL = "https://42f8-185-181-209-142.ngrok-free.app";
-const isTesting = false;
+const isTesting = true;
+
 export interface Question {
+  /** @description Generated question text */
   question: string;
+  /** @description Expected answer text */
   answer: string;
 }
 
-export interface CheckAnswerResult {
-  result: boolean;
-  message: string;
-}
+// Initialize API client
+const apiClient = new Api({
+  baseUrl: API_URL,
+  baseApiParams: {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  },
+});
 
 // Mock data for testing
 const mockTranscript = `This is a mock transcript for testing purposes.
@@ -35,83 +44,60 @@ const mockQuestions: Question[] = [
   },
 ];
 
-// Fetches transcript from a YouTube URL
+
 export async function getTranscript(youtubeUrl: string): Promise<string> {
   if (isTesting) {
     return mockTranscript;
   }
 
-  const response = await fetch(
-    `${API_URL}/transcript?url=${encodeURIComponent(youtubeUrl)}`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch transcript");
-  }
-  const data = await response.json();
-  const text = data.text;
-
-  return text;
+  const response = await apiClient.transcript.transcriptList({
+    url: youtubeUrl,
+  });
+  return response.text || ""; // TODO: remove ""
 }
 
-// Translates text to target language
 export async function translateText(
   text: string,
   targetLanguage: string
 ): Promise<string> {
   if (isTesting) {
-    // Simple mock that just adds a prefix to simulate translation
     return `[${targetLanguage} translation] ${text}`;
   }
 
-  const response = await fetch(
-    `${API_URL}/translate?lang=${encodeURIComponent(targetLanguage)}`,
+  const response = await apiClient.translate.translateCreate(
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text: text }),
+      lang: targetLanguage,
+    },
+    {
+      text,
     }
   );
-  if (!response.ok) {
-    throw new Error("Failed to translate text");
-  }
-  const data = await response.json();
-  return data.text;
+  return response;
 }
 
-// Generates questions from text
-export async function generateQuestions(
-  text: string,
-  count: number
-): Promise<Question[]> {
+export async function generateQuestions(text: string, count: number): Promise<Question[]> {
   if (isTesting) {
-    // Return a subset of mock questions based on count
     return mockQuestions.slice(0, Math.min(count, mockQuestions.length));
   }
 
-  const response = await fetch(`${API_URL}/build_questions?count=${count}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await apiClient.buildQuestions.buildQuestionsCreate(
+    {
+      count,
     },
-    body: JSON.stringify({ text: text }),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to generate questions");
-  }
-  const data = await response.json();
-  return data.questions;
+    {
+      text,
+    }
+  );
+  return response.questions || [];
 }
 
-// Checks user's answer against correct answer
+
 export async function checkAnswer(
   question: string,
   correctAnswer: string,
   userAnswer: string
-): Promise<CheckAnswerResult> {
+): Promise<{ result: boolean; message: string }> {
   if (isTesting) {
-    // Simple mock implementation that checks if answers contain same words
     const normalizedCorrect = correctAnswer.toLowerCase().trim();
     const normalizedUser = userAnswer.toLowerCase().trim();
 
@@ -127,19 +113,9 @@ export async function checkAnswer(
     };
   }
 
-  const response = await fetch(`${API_URL}/check_answer`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      question,
-      correctAnswer,
-      userAnswer,
-    }),
+  return await apiClient.checkAnswer.checkAnswerCreate({
+    question,
+    correctAnswer,
+    userAnswer,
   });
-  if (!response.ok) {
-    throw new Error("Failed to check answer");
-  }
-  return await response.json();
 }

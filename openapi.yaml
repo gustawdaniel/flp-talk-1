@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+  description: API for transcription, translation, question generation, and answer verification
+
+paths:
+  /transcript:
+    get:
+      summary: Get Transcript
+      description: Transcribe content from a URL
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+          description: URL of the content to transcribe
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+                    description: Transcribed content in UTF-8
+
+  /translate:
+    post:
+      summary: Translate Text
+      description: Translate text to a target language
+      parameters:
+        - name: lang
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Target language code (e.g., "es" for Spanish)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: Text content to translate
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Translated text content
+
+  /build_questions:
+    post:
+      summary: Generate Questions
+      description: Generate questions from text content
+      parameters:
+        - name: count
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: Number of questions to generate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: Text content to generate questions from
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        question:
+                          required: true
+                          type: string
+                          description: Generated question text
+                        answer:
+                          required: true
+                          type: string
+                          description: Expected answer text
+
+  /check_answer:
+    post:
+      summary: Check Answer
+      description: Check if a user's answer to a question is correct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  required: true
+                  description: The question text
+                correctAnswer:
+                  type: string
+                  required: true
+                  description: The correct answer
+                userAnswer:
+                  type: string
+                  required: true
+                  description: The user's answer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    required: true
+                    description: Whether the answer is correct
+                  message:
+                    type: string
+                    required: true
+                    description: Explanation of why the answer is correct/incorrect

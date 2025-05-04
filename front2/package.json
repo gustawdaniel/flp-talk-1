@@ -5,7 +5,8 @@
   "scripts": {
     "start": "bun run dev",
     "dev": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "generate-api": "openapi-typescript ../openapi.yaml -o src/generated/api-types.ts; swagger-typescript-api generate -p ../openapi.yaml -o src/generated -n api-client.ts --unwrap-response-data"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -17,7 +18,9 @@
     "@types/react-dom": "^18.2.15",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
+    "openapi-typescript": "^7.7.0",
     "style-loader": "^3.3.3",
+    "swagger-typescript-api": "^13.1.3",
     "ts-loader": "^9.5.1",
     "typescript": "^5.2.2",
     "webpack": "^5.89.0",
