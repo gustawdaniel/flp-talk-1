@@ -45,7 +45,9 @@ Translated text content
 
 **Request Body:**
 ```
-Text content to generate questions from
+{
+  "text": <utf-8>
+}
 ```
 
 **Response:**
