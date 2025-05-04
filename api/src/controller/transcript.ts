@@ -37,7 +37,7 @@ export async function transcript(req: FastifyRequest<TranscriptRouteGeneric>): P
         {
             role: "system",
             content:
-                "You are a helpful assistant.",
+                "You are a helpful assistant that using tools to transcript and respond ONLY with tool result without commenting, explain in format that have ONLY pure transcription.",
         },
         {
             role: "user",
