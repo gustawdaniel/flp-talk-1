@@ -123,11 +123,11 @@ export async function checkAnswer(
       result: isCorrect,
       message: isCorrect
         ? "Your answer is correct!"
-        : "Your answer is incorrect. The correct answer is: " + correctAnswer,
+        : "Mock message why the answer is incorrect",
     };
   }
 
-  const response = await fetch(`${API_URL}/check_answers`, {
+  const response = await fetch(`${API_URL}/check_answer`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
