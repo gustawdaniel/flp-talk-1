@@ -64,7 +64,7 @@ Translated text content
 ## Answer Verification API
 
 ### Check Answer
-**Endpoint:** `POST /check_answers`
+**Endpoint:** `POST /check_answer`
 
 **Request Body:**
 ```

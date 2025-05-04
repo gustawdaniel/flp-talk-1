@@ -48,7 +48,9 @@ export async function getTranscript(youtubeUrl: string): Promise<string> {
     throw new Error("Failed to fetch transcript");
   }
   const data = await response.json();
-  return data.text;
+  const text = data.text;
+
+  return text;
 }
 
 // Translates text to target language
@@ -74,7 +76,8 @@ export async function translateText(
   if (!response.ok) {
     throw new Error("Failed to translate text");
   }
-  return await response.text();
+  const data = await response.json();
+  return data.text;
 }
 
 // Generates questions from text
@@ -120,11 +123,11 @@ export async function checkAnswer(
       result: isCorrect,
       message: isCorrect
         ? "Your answer is correct!"
-        : "Your answer is incorrect. The correct answer is: " + correctAnswer,
+        : "Mock message why the answer is incorrect",
     };
   }
 
-  const response = await fetch(`${API_URL}/check_answers`, {
+  const response = await fetch(`${API_URL}/check_answer`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -9,6 +9,7 @@ const InteractiveLearningScreen: React.FC = () => {
   const [feedback, setFeedback] = useState<{ message: string; isCorrect: boolean } | null>(null);
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [lastQuestionFeedback, setLastQuestionFeedback] = useState<{ message: string; isCorrect: boolean; answer: string } | null>(null);
   const navigate = useNavigate();
   const { questions, score, setScore } = useAppContext();
 
@@ -37,12 +38,18 @@ const InteractiveLearningScreen: React.FC = () => {
         setScore(score + 1);
       }
 
-      setFeedback({
+      const newFeedback = {
         message: result.message,
         isCorrect: result.result
-      });
+      };
+
+      setFeedback(newFeedback);
 
       if (currentQuestionIndex >= questions.length - 1) {
+        setLastQuestionFeedback({
+          ...newFeedback,
+          answer: currentQuestion.answer
+        });
         setCompleted(true);
       }
     } catch (err) {
@@ -80,6 +87,19 @@ const InteractiveLearningScreen: React.FC = () => {
       <div className="container">
         <h1>Learning Completed!</h1>
         <p>Your final score: {score} out of {questions.length}</p>
+
+        {lastQuestionFeedback && (
+          <div className="last-question-feedback">
+            <h3>Feedback for the last question:</h3>
+            <div className={`feedback ${lastQuestionFeedback.isCorrect ? 'correct' : 'incorrect'}`}>
+              {lastQuestionFeedback.message}
+              {!lastQuestionFeedback.isCorrect && (
+                <p>Correct answer: {lastQuestionFeedback.answer}</p>
+              )}
+            </div>
+          </div>
+        )}
+
         <button onClick={handleRestart}>Start Over</button>
       </div>
     );
