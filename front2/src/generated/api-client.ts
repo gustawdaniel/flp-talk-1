@@ -288,7 +288,7 @@ export class Api<
       this.request<
         {
           /** Transcribed content in UTF-8 */
-          text?: string;
+          text: string;
         },
         any
       >({
@@ -314,16 +314,23 @@ export class Api<
       },
       data: {
         /** Text content to translate */
-        text?: string;
+        text: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<string, any>({
+      this.request<
+        {
+          /** Translated text content */
+          text: string;
+        },
+        any
+      >({
         path: `/translate`,
         method: "POST",
         query: query,
         body: data,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
   };
@@ -342,7 +349,7 @@ export class Api<
       },
       data: {
         /** Text content to generate questions from */
-        text?: string;
+        text: string;
       },
       params: RequestParams = {},
     ) =>

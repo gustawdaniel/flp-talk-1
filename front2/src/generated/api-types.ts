@@ -87,7 +87,10 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": string;
+                        "application/json": {
+                            /** @description Translated text content */
+                            text?: string;
+                        };
                     };
                 };
             };

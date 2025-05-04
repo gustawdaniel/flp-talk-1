@@ -3,7 +3,7 @@ const API_URL = "http://127.0.0.1:4747"; // Change this to your actual API URL
 import { Api } from "./generated/api-client";
 import type { components } from "./generated/api-types";
 
-const isTesting = true;
+const isTesting = false;
 
 export type Question = components["schemas"]["Question"];
 
@@ -67,7 +67,7 @@ export async function translateText(
       text,
     }
   );
-  return response;
+  return response.text;
 }
 
 export async function generateQuestions(text: string, count: number): Promise<Question[]> {
