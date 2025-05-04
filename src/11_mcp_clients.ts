@@ -38,3 +38,10 @@ export const mastra = new Mastra({
     level: "info",
   }),
 });
+
+async function main() {
+  const res = await mastra.getAgent('Sopranos Agent').generate('tell me your name');
+  console.log(res.text);
+}
+
+main().catch(console.error);
